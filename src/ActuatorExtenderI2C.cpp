@@ -192,7 +192,7 @@ void ActuatorExtenderI2C::setDutycycleLeft(short dutycycle)
     setPin(pcaPinmap.pwm2, PCA_LOW);
   }
   else
-  {
+  { 
     setPin(pcaPinmap.pwm1, PCA_LOW);
     setPin(pcaPinmap.pwm2, counter);    
   }
@@ -315,4 +315,43 @@ bool ActuatorExtenderI2C::isEmergencyStop()
   {
     return false;
   }
+}
+
+uint16_t ActuatorExtenderI2C::measureBemfLeft(int delayMs)
+{
+  enableLeftMotor(false);
+  delay(delayMs);
+  uint16_t value = readADC_SingleEnded(adsPinmap.bemf12);
+  enableLeftMotor();
+  return value;
+}
+
+uint16_t ActuatorExtenderI2C::measureBemfRight(int delayMs)
+{
+  enableRightMotor(false);
+  delay(delayMs);
+  uint16_t value = readADC_SingleEnded(adsPinmap.bemf34);
+  enableRightMotor();
+  return value;
+}
+
+void ActuatorExtenderI2C::measureBemfs(uint16_t *left, uint16_t *right, int delayMs)
+{
+  enableLeftMotor(false);
+  enableRightMotor(false);
+  delay(delayMs);
+  *left = readADC_SingleEnded(adsPinmap.bemf12);
+  *right = readADC_SingleEnded(adsPinmap.bemf34);
+  enableLeftMotor();
+  enableRightMotor();
+}
+
+uint16_t ActuatorExtenderI2C::measureCurrentLeft()
+{
+	return readADC_SingleEnded(adsPinmap.is12);
+}
+
+uint16_t ActuatorExtenderI2C::measureCurrentRight()
+{
+	return readADC_SingleEnded(adsPinmap.is34);
 }

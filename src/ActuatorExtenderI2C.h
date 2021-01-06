@@ -144,7 +144,41 @@ class ActuatorExtenderI2C : public Adafruit_PWMServoDriver, public Adafruit_ADS1
      * @retval true if emergeny stop pressed
      */
     bool isEmergencyStop();
-    
+
+    /*!
+     * @brief Disable motor, read back emf and enable again
+     * @param delayMs time between disabling and measurement
+     * @retval bemf value (12-Bit)
+     */
+    uint16_t measureBemfLeft(int delayMs = 10);
+
+    /*!
+     * @brief Disable motor, read back emf and enable again
+     * @param delayMs time between disabling and measurement
+     * @retval bemf value (12-Bit)
+     */ 
+    uint16_t measureBemfRight(int delayMs = 10);
+
+    /*!
+     * @brief Measure back emf of both motors at same time
+     * @param left, pointer to left back emf value (12-Bit)
+     * @param right, pointer to right back emf value (12-Bit)
+     * @param delayMs time between disabling and measurement
+     */
+    void measureBemfs(uint16_t *left, uint16_t *right, int delayMs = 10);
+
+    /*!
+     * @brief Measure current
+     * @retval current (12-Bit)
+     */
+    uint16_t measureCurrentLeft();
+
+    /*!
+     * @brief Measure current
+     * @retval current (12-Bit)
+     */
+    uint16_t measureCurrentRight();
+
   private:
 
     const uint16_t PCA_HIGH = 4095;
