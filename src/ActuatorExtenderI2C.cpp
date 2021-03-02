@@ -171,60 +171,73 @@ void ActuatorExtenderI2C::setDutycycles(short left, short right)
 
 void ActuatorExtenderI2C::setDutycycleLeft(short dutycycle)
 {
-  bool forward = true;
+	static short last = 0xffff;
 
-  if(dutycycle < 0)
-  {
-    forward = false;
-    dutycycle = -dutycycle;
-  }
+	if(last != dutycycle)
+	{
+	  bool forward = true;
 
-  uint16_t counter = (uint16_t)(4096 * (dutycycle / 100.0));
+		if(dutycycle < 0)
+		{
+		  forward = false;
+		  dutycycle = -dutycycle;
+		}
 
-  if(counter > 4095)
-  {
-    counter = 4095;  
-  }
-  
-  if(forward)
-  {
-    setPin(pcaPinmap.pwm1, counter);
-    setPin(pcaPinmap.pwm2, PCA_LOW);
-  }
-  else
-  { 
-    setPin(pcaPinmap.pwm1, PCA_LOW);
-    setPin(pcaPinmap.pwm2, counter);    
-  }
+		uint16_t counter = (uint16_t)(4096 * (dutycycle / 100.0));
+
+		if(counter > 4095)
+		{
+		  counter = 4095;  
+		}
+		
+		if(forward)
+		{
+		  setPin(pcaPinmap.pwm1, counter);
+		  setPin(pcaPinmap.pwm2, PCA_LOW);
+		}
+		else
+		{ 
+		  setPin(pcaPinmap.pwm1, PCA_LOW);
+		  setPin(pcaPinmap.pwm2, counter);    
+		}
+
+		last = dutycycle;
+	}
 }
 
 void ActuatorExtenderI2C::setDutycycleRight(short dutycycle)
 {
-  bool forward = true;
+	static short last = 0xffff;
 
-  if(dutycycle < 0)
-  {
-    forward = false;
-    dutycycle = -dutycycle;
-  }
+	if(last != dutycycle)
+	{
+	  bool forward = true;
+		if(dutycycle < 0)
+		{
+		  forward = false;
+		  dutycycle = -dutycycle;
+		}
 
-  uint16_t counter = (uint16_t)(4096 * (dutycycle / 100.0));
+		uint16_t counter = (uint16_t)(4096 * (dutycycle / 100.0));
 
-  if(counter > 4095)
-  {
-    counter = 4095;  
-  }
-  
-  if(forward)
-  {
-    setPin(pcaPinmap.pwm3, counter);
-    setPin(pcaPinmap.pwm4, PCA_LOW);
-  }
-  else
-  {
-    setPin(pcaPinmap.pwm3, PCA_LOW);
-    setPin(pcaPinmap.pwm4, counter);    
-  }  
+		if(counter > 4095)
+		{
+		  counter = 4095;  
+		}
+		
+		if(forward)
+		{
+		  setPin(pcaPinmap.pwm3, counter);
+		  setPin(pcaPinmap.pwm4, PCA_LOW);
+		}
+		else
+		{
+		  setPin(pcaPinmap.pwm3, PCA_LOW);
+		  setPin(pcaPinmap.pwm4, counter);    
+		}  
+
+		last = dutycycle;
+	}
 }
 
 void ActuatorExtenderI2C::breakPowertrain()
@@ -253,44 +266,56 @@ void ActuatorExtenderI2C::setServos(short servo0, short servo1)
 
 void ActuatorExtenderI2C::setServo0(short pos)
 {
-  if(pos < 0)
-  {
-    pos = 0;
-  }
-  else if(pos > 180)
-  {
-    pos = 180;
-  }
-  
-  if(servo0Connected)
-  {
-    setPin(pcaPinmap.servo0, SERVO_MIN + (uint16_t)((SERVO_MAX-SERVO_MIN) * (pos / 180.0)));
-  }
-  else
-  {
-    servo0->write(pos);
-  }
+	static short last = 0xffff;
+
+	if(last != pos)
+	{
+		if(pos < 0)
+		{
+		  pos = 0;
+		}
+		else if(pos > 180)
+		{
+		  pos = 180;
+		}
+		
+		if(servo0Connected)
+		{
+		  setPin(pcaPinmap.servo0, SERVO_MIN + (uint16_t)((SERVO_MAX-SERVO_MIN) * (pos / 180.0)));
+		}
+		else
+		{
+		  servo0->write(pos);
+		}
+		last = pos;
+	}
 }
 
 void ActuatorExtenderI2C::setServo1(short pos)
 {
-  if(pos < 0)
-  {
-    pos = 0;
-  }
-  else if(pos > 180)
-  {
-    pos = 180;
-  }
-  
-  if(servo0Connected)
-  {
-    setPin(pcaPinmap.servo1, SERVO_MIN + (uint16_t)((SERVO_MAX-SERVO_MIN) * (pos / 180.0)));
-  }
-  else
-  {
-    servo0->write(pos);
-  }  
+	static short last = 0xffff;
+
+	if(last != pos)
+	{
+		if(pos < 0)
+		{
+		  pos = 0;
+		}
+		else if(pos > 180)
+		{
+		  pos = 180;
+		}
+		
+		if(servo0Connected)
+		{
+		  setPin(pcaPinmap.servo1, SERVO_MIN + (uint16_t)((SERVO_MAX-SERVO_MIN) * (pos / 180.0)));
+		}
+		else
+		{
+		  servo0->write(pos);
+		}  
+		last = pos;
+	}
 }
 
 bool ActuatorExtenderI2C::isAlert()
